@@ -61,7 +61,7 @@ class UserDetailScreen extends Component {
   }
 
   onShowDetail = (item, index) => {
-    this.setState({ showCarousel: true, firstCarousel: index });
+    this.setState({ firstCarousel: index, showCarousel: true });
   }
 
   onCloseCarousel = () => {

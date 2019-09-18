@@ -39,11 +39,14 @@ export class ImageCarousel extends Component {
             sliderWidth={Metric.carouselSliderWidth}
             itemWidth={Metric.carouselItemWidth}
             firstItem={firstIndex}
+            initialNumToRender={selectedUser.images.length}
             inactiveSlideScale={0.94}
             inactiveSlideOpacity={0.7}
             containerCustomStyle={styles.slider}
             contentContainerCustomStyle={styles.sliderContentContainer}
             onSnapToItem={(index) => this.setState({ slider1ActiveSlide: index }) }
+            activeSlideOffset={40}
+            loop
           />
         </View>
         <TouchableOpacity style={styles.carouselCloseContainer} onPress={onClose}>
