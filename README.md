@@ -29,3 +29,6 @@ npm install -g react-native-cli
 ## Known Issues
 On android version, currently there is known issue of carousel. please refer to [this](https://github.com/archriss/react-native-snap-carousel#known-issues).
 Trying to fix it now.
+
+## Running on iOS(video capture)
+https://www.dropbox.com/s/ap2cizav6285czp/react-native-unsplash.mov?dl=0
