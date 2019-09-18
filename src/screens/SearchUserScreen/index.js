@@ -31,6 +31,10 @@ class SearchUserScreen extends Component {
     this.setState({ isFetching: true });
     const res = await getUnsplashUsersAPI(this.nextPagination, query);
     this.setState({ isFetching: false });
+    if (res.error) {
+      alert('failure to call the api to get the users');
+      return;
+    }
     if (_.get(res, 'total_pages', 0) > this.nextPagination) {
       this.nextPagination += 1;
     } else {
