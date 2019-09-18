@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { SafeAreaView } from 'react-navigation';
 import _ from 'lodash';
-import { View, Image, Text, FlatList } from 'react-native';
+import { View, Image, Text, FlatList, TouchableOpacity, Modal } from 'react-native';
 import { connect } from 'react-redux';
 import { styles } from './styles';
 import { CommonStyle } from '../../themes';
@@ -9,11 +9,16 @@ import { Header } from '../../components';
 import { callAPI } from '../../service/api';
 import { selectedUserSelector } from '../../redux/selector';
 import { SelectedUserActions } from '../../redux';
+import { ImageCarousel } from './ImageCarousel';
+
+
 class UserDetailScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      photos: []
+      photos: [],
+      showCarousel: false,
+      firstCarousel: 0
     }
     this.nextPagination = 1;
     this.pageSize = 10;
@@ -55,6 +60,14 @@ class UserDetailScreen extends Component {
     this.props.navigation.goBack();
   }
 
+  onShowDetail = (item, index) => {
+    this.setState({ showCarousel: true, firstCarousel: index });
+  }
+
+  onCloseCarousel = () => {
+    this.setState({ showCarousel: false });
+  }
+
   renderUserInfo = () => {
     const { navigation } = this.props;
     const name = _.get(navigation, 'state.params.userDetail.name', '');
@@ -88,10 +101,12 @@ class UserDetailScreen extends Component {
       return <Image source={require('../../assets/img_placeholder.jpg')} style={styles.userImageContainer}/>;
     }
     return (
-      <Image
-        style={styles.userImageContainer}
-        source={{ uri }}
-      />
+      <TouchableOpacity style={styles.userImageContainer} onPress={() => this.onShowDetail(item, index)}>
+        <Image
+          style={styles.userImageItem}
+          source={{ uri }}
+        />
+      </TouchableOpacity>
     );
   }
 
@@ -118,6 +133,7 @@ class UserDetailScreen extends Component {
   };
 
   render() {
+    const { showCarousel, firstCarousel } = this.state;
     return (
       <SafeAreaView style={CommonStyle.container}>
         <Header title="User Details" onBack={this.onBack} />
@@ -125,6 +141,12 @@ class UserDetailScreen extends Component {
           {this.renderUserInfo()}
           {this.renderUserImages()}
         </View>
+        <ImageCarousel
+          {...this.props}
+          firstIndex={firstCarousel}
+          showCarousel={showCarousel}
+          onClose={this.onCloseCarousel}
+        />
       </SafeAreaView>
     );
   }

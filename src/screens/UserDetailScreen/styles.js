@@ -39,12 +39,14 @@ export const styles = StyleSheet.create({
   separator: {
     height: 5,
   },
-  userImageContainer: {
+  userImageItem: {
     width: (Metric.width - 30) / 2,
     height: (Metric.width - 30) / 2,
-    marginHorizontal: 5,
     resizeMode: 'cover',
-    borderRadius: 5
+    borderRadius: 5,
+  },
+  userImageContainer: {
+    marginHorizontal: 5,
   },
   userImagesContainer: {
     marginTop: 20,
@@ -53,5 +55,29 @@ export const styles = StyleSheet.create({
   imagesList: {
     marginTop: 10,
     flex: 1
+  },
+  slider: {
+    marginTop: 15,
+    overflow: 'visible', // for custom animations
+  },
+  sliderContentContainer: {
+    paddingVertical: 10,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  carouselContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Color.backgroundColor
+  },
+  carouselCloseContainer: {
+    position: 'absolute',
+    right: 10,
+    top: 30,
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
