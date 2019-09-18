@@ -2,7 +2,7 @@ import { Color } from './';
 export default {
   container: {
     flex: 1,
-    backgroundColor: Color.white
+    backgroundColor: Color.backgroundColor
   },
   activityContainer: {
     position: 'absolute',
