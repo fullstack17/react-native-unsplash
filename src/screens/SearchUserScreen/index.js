@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import { SafeAreaView } from 'react-navigation';
 import { View, FlatList, Image, Text, TouchableOpacity } from 'react-native';
 import SearchBar from 'react-native-dynamic-search-bar';
+import { connect } from 'react-redux';
 import { CommonStyle } from '../../themes';
 import { styles } from './styles';
 import _ from 'lodash';
 import { getUnsplashUsers as getUnsplashUsersAPI } from './../../service/api';
 import { Color } from '../../themes';
+import { userSelector } from '../../redux/selector';
+import { UserActions } from '../../redux';
 
 class SearchUserScreen extends Component {
   constructor(props) {
@@ -23,6 +26,7 @@ class SearchUserScreen extends Component {
   }
 
   onGetUsers = async () => {
+    console.info('this.props', this.props);
     this.setState({ isFetching: true });
     const res = await getUnsplashUsersAPI(this.nextPagination, 'start');
     this.setState({ isFetching: false });
@@ -32,8 +36,7 @@ class SearchUserScreen extends Component {
       this.nextPagination = -1; // no more
     }
     if (_.get(res, 'results.length', 0)) {
-      const updatedUsers = [...this.state.users, ..._.get(res, 'results', [])];
-      this.setState({ users: updatedUsers });
+      this.props.addUsers(_.get(res, 'results', []));
     }
   }
 
@@ -44,8 +47,9 @@ class SearchUserScreen extends Component {
   }
 
   onLoadMore = () => {
-    const { isFetching, users } = this.state;
-    if (this.nextPagination != -1 && !isFetching && users.length !== 0) {
+    const { isFetching } = this.state;
+    const { user } = this.props;
+    if (this.nextPagination != -1 && !isFetching && user.users.length !== 0) {
       this.onGetUsers();
     }
   }
@@ -76,7 +80,7 @@ class SearchUserScreen extends Component {
   renderSeparator = () => <View style={styles.separator} />;
 
   render() {
-    const { users } = this.state;
+    const { user } = this.props;
     return (
       <SafeAreaView style={CommonStyle.container}>
         <SearchBar
@@ -92,7 +96,7 @@ class SearchUserScreen extends Component {
         />
         <View style={styles.container}>
           <FlatList
-            data={users}
+            data={user.users}
             renderItem={this.renderItem}
             keyExtractor={(item, index) => `index-${index}`}
             ItemSeparatorComponent={this.renderSeparator}
@@ -104,5 +108,12 @@ class SearchUserScreen extends Component {
     );
   }
 }
+const mapStateToProps = state => ({
+  ...userSelector(state)
+});
 
-export default SearchUserScreen;
+const mapDispatchToProps = dispatch => ({
+  addUsers: newUsers => dispatch(UserActions.addUsers(newUsers))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchUserScreen);
