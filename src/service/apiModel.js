@@ -2,12 +2,12 @@ import AppConfig from '../config';
 
 const { BaseUrl } = AppConfig;
 
-export const apiModels = async (url, method, parameters, token) => {
+export const apiModels = async (url, method, parameters, token, isContainBaseUrl = false) => {
   let ret = null;
   let queryURL = '';
   let params = {};
   try {
-    queryURL = `${BaseUrl}/${url}`;
+    queryURL = isContainBaseUrl ? url : `${BaseUrl}/${url}`;
     const body = JSON.stringify(parameters);
     const headers = {
       'Content-Type': 'application/json',
