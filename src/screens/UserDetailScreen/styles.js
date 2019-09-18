@@ -72,12 +72,13 @@ export const styles = StyleSheet.create({
     backgroundColor: Color.backgroundColor
   },
   carouselCloseContainer: {
-    position: 'absolute',
-    right: 10,
-    top: 30,
     width: 40,
     height: 40,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginRight: 10
+  },
+  carouselHeader: {
+    alignItems: 'flex-end',
   }
 });

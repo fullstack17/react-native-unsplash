@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { SafeAreaView } from 'react-navigation';
-import { View, FlatList, Image, Text, TouchableOpacity } from 'react-native';
+import { View, FlatList, Image, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import SearchBar from 'react-native-dynamic-search-bar';
 import { connect } from 'react-redux';
 import { CommonStyle } from '../../themes';
@@ -15,8 +15,8 @@ class SearchUserScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: [],
-      isFetching: false
+      isFetching: false,
+      query: ''
     }
     this.nextPagination = 1;
   }
@@ -26,9 +26,10 @@ class SearchUserScreen extends Component {
   }
 
   onGetUsers = async () => {
-    console.info('this.props', this.props);
+    const { query } = this.state;
+
     this.setState({ isFetching: true });
-    const res = await getUnsplashUsersAPI(this.nextPagination, 'start');
+    const res = await getUnsplashUsersAPI(this.nextPagination, query);
     this.setState({ isFetching: false });
     if (_.get(res, 'total_pages', 0) > this.nextPagination) {
       this.nextPagination += 1;
@@ -41,20 +42,22 @@ class SearchUserScreen extends Component {
   }
 
   onSearch = (query) => {
-    if (query.length <= 1) {
-      this.nextPagination = 1;
+    this.nextPagination = 1;
+    this.props.clearUsers();
+    if (query.length >= 2) {
+      this.setState({ query }, this.onGetUsers);
     }
   }
 
   onLoadMore = () => {
     const { isFetching } = this.state;
-    const { user } = this.props;
-    if (this.nextPagination != -1 && !isFetching && user.users.length !== 0) {
+    if (this.nextPagination != -1 && !isFetching) {
       this.onGetUsers();
     }
   }
 
   onShowDetail = (item, index) => {
+    this.props.navigation.navigate('UserDetailScreen', { userDetail: item });
   }
 
   renderItem = ({ item, index }) => {
@@ -79,10 +82,20 @@ class SearchUserScreen extends Component {
 
   renderSeparator = () => <View style={styles.separator} />;
 
+  renderActivity = () => {
+    const { isFetching } = this.state;
+    if (!isFetching) return null;
+    return (
+      <View style={CommonStyle.activityContainer}>
+        <ActivityIndicator size="large" color={Color.white} />
+      </View>
+    )
+  }
+
   render() {
     const { user } = this.props;
     return (
-      <SafeAreaView style={CommonStyle.container}>
+      <SafeAreaView style={CommonStyle.container} forceInset={{ top: 'never' }}>
         <SearchBar
           fontColor={Color.searchColor}
           iconColor={Color.searchColor}
@@ -92,7 +105,7 @@ class SearchUserScreen extends Component {
           placeholder="Type 2 chars at least to start to search"
           onChangeText={this.onSearch}
           onPressCancel={() => this.onSearch('')}
-          onPress={() => alert("onPress")}
+          onPress={() => null}
         />
         <View style={styles.container}>
           <FlatList
@@ -104,6 +117,7 @@ class SearchUserScreen extends Component {
             onEndReached={this.onLoadMore}
           />
         </View>
+        {this.renderActivity()}
       </SafeAreaView>
     );
   }
@@ -113,7 +127,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addUsers: newUsers => dispatch(UserActions.addUsers(newUsers))
+  addUsers: newUsers => dispatch(UserActions.addUsers(newUsers)),
+  clearUsers: () => dispatch(UserActions.clearUsers())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchUserScreen);
