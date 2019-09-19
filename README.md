@@ -36,3 +36,6 @@ Trying to fix it now.
 
 ## Running on iOS(video capture)
 https://www.dropbox.com/s/ap2cizav6285czp/react-native-unsplash.mov?dl=0
+
+## Running on Android
+https://appetize.io/app/dq128xawrgp3c95an354qfrer0
