@@ -10,6 +10,7 @@ import { getUnsplashUsers as getUnsplashUsersAPI } from './../../service/api';
 import { Color } from '../../themes';
 import { userSelector } from '../../redux/selector';
 import { UserActions } from '../../redux';
+import { showAlert } from '../../utils';
 
 class SearchUserScreen extends Component {
   constructor(props) {
@@ -32,8 +33,7 @@ class SearchUserScreen extends Component {
     const res = await getUnsplashUsersAPI(this.nextPagination, query);
     this.setState({ isFetching: false });
     if (res.error) {
-      alert('failure to call the api to get the users');
-      return;
+      return showAlert('Failure to fetch the users from Unsplash');
     }
     if (_.get(res, 'total_pages', 0) > this.nextPagination) {
       this.nextPagination += 1;

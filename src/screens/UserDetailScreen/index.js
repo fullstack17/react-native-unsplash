@@ -10,7 +10,7 @@ import { callAPI } from '../../service/api';
 import { selectedUserSelector } from '../../redux/selector';
 import { SelectedUserActions } from '../../redux';
 import { ImageCarousel } from './ImageCarousel';
-
+import { showAlert } from '../../utils';
 
 class UserDetailScreen extends Component {
   constructor(props) {
@@ -36,7 +36,7 @@ class UserDetailScreen extends Component {
       const res = await callAPI(photoLink, this.nextPagination, this.pageSize);
       this.setState({ isFetching: false });
       if (res.error) {
-        alert('error');
+        showAlert('Failure to fetch the photos from this user. Please try again later');
       } else {
         if (res.length < this.pageSize) {
           this.nextPagination = -1; // no more
