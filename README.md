@@ -17,14 +17,18 @@ npm install -g react-native-cli
 3. Configure the ANDROID_HOME environment variable
 ```
 ### iOS
-`yarn`
-`cd ios && pod install`
-`cd .. & react-native run-ios`
+```
+yarn
+cd ios && pod install
+cd .. & react-native run-ios
+```
 
 ### Android
-`yarn`
-`npx jetifier`
-`npx react-native run-android`
+```
+yarn
+npx jetifier
+npx react-native run-android
+```
 
 ## Known Issues
 On android version, currently there is known issue of carousel. please refer to [this](https://github.com/archriss/react-native-snap-carousel#known-issues).
